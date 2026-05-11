@@ -1,0 +1,389 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* ── Crossword page scoped styles ────────────────────────────── */
+
+/* Prevent page-level horizontal scroll */
+html, body {
+  overflow-x: hidden;
+  background: url('/ChatGPT_Image_May_11,_2026,_03_49_25_PM.png') center/cover no-repeat fixed;
+  min-height: 100vh;
+}
+
+/* Glass card constraints */
+.cw-glass {
+  max-width: 980px;
+  margin: 0 auto 8px;
+  border-radius: 20px;
+  padding: 0;
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  background: rgba(255,255,255,0.08);
+  border: 1px solid rgba(255,255,255,0.2);
+  box-shadow: 0 8px 32px rgba(0,0,0,0.18), 0 1.5px 8px rgba(0,0,0,0.10);
+}
+
+@media (min-width: 1024px) {
+  .cw-glass {
+    padding: clamp(10px, 2vw, 20px);
+  }
+}
+
+/* Main content area: grid + clues row */
+.cw-content-row {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding-top: 10px;
+}
+
+@media (min-width: 1024px) {
+  .cw-content-row {
+    flex-direction: row;
+    align-items: flex-start;
+    gap: 20px;
+    padding-top: 0;
+  }
+}
+
+/* Grid column — 60% on desktop */
+.cw-grid-col {
+  width: 100%;
+  max-width: 100%;
+}
+
+@media (min-width: 1024px) {
+  .cw-grid-col {
+    width: 60%;
+    flex-shrink: 0;
+  }
+}
+
+/* Grid viewport: horizontal scroller on mobile */
+.cw-grid-viewport {
+  width: 100%;
+  max-width: 100%;
+  box-sizing: border-box;
+  overflow-x: auto;
+  overflow-y: hidden;
+  -webkit-overflow-scrolling: touch;
+  overscroll-behavior-x: contain;
+  padding-left: 0;
+  padding-right: 0;
+}
+
+/* Inner wrapper — allows grid to be its natural size and scroll */
+.cw-grid-scroll-inner {
+  width: max-content;
+  margin: 0 auto;
+}
+
+/* Clues column — 40% on desktop, scrollable when tall */
+.cw-clues-col {
+  flex: 1;
+  min-width: 0;
+  word-break: break-word;
+  padding-left: 16px;
+  padding-right: 16px;
+}
+
+@media (min-width: 1024px) {
+  .cw-clues-col {
+    width: 40%;
+    overflow-y: auto;
+    scrollbar-width: thin;
+    padding-left: 0;
+    padding-right: 10px;
+  }
+}
+
+/* Collapsible clues toggle — mobile only */
+.cw-clues-toggle {
+  border: 1px solid rgba(0,0,0,0.15);
+  border-radius: 10px;
+  overflow: hidden;
+}
+
+.cw-clues-toggle summary {
+  list-style: none;
+  cursor: pointer;
+  padding: 10px 16px;
+  font-weight: 700;
+  font-size: 0.9rem;
+  color: #000;
+  background: rgba(255,255,255,0.45);
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+  border-radius: 10px;
+  user-select: none;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.cw-clues-toggle summary::-webkit-details-marker {
+  display: none;
+}
+
+.cw-clues-toggle summary::before {
+  content: '+';
+  font-size: 1.1rem;
+  line-height: 1;
+  transition: transform 0.2s;
+  display: inline-block;
+}
+
+.cw-clues-toggle[open] summary::before {
+  transform: rotate(45deg);
+}
+
+.cw-clues-toggle .cw-clues-inner {
+  padding: 14px 16px 16px;
+}
+
+/* Clue section headings */
+.cw-clue-heading {
+  font-size: 1rem;
+  font-weight: 700;
+  color: #000;
+  border-bottom: 2px solid #000;
+  padding-bottom: 4px;
+  margin-top: 16px;
+  margin-bottom: 8px;
+  background: transparent;
+}
+
+@media (min-width: 1024px) {
+  .cw-clue-heading {
+    position: sticky;
+    top: 0;
+    background: transparent;
+    z-index: 1;
+  }
+}
+
+/* Clues two-column layout for desktop */
+.cw-clues-two-col {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px;
+}
+
+@media (max-width: 1023px) {
+  .cw-clues-two-col {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+  }
+}
+
+/* Clue rows */
+.cw-clue-list {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+.cw-clue-row {
+  display: flex;
+  gap: 6px;
+  line-height: 1.4;
+}
+
+.cw-clue-num {
+  font-weight: 700;
+  color: #000;
+  width: 24px;
+  flex-shrink: 0;
+  text-align: right;
+  font-size: 0.875rem;
+}
+
+@media (min-width: 1024px) {
+  .cw-clue-num {
+    font-size: 1.05rem;
+    width: 28px;
+  }
+}
+
+.cw-clue-text {
+  font-size: 0.875rem;
+  color: #000;
+  flex: 1;
+  word-break: break-word;
+}
+
+@media (min-width: 1024px) {
+  .cw-clue-text {
+    font-size: 1.05rem;
+  }
+}
+
+.cw-clue-text.cw-correct {
+  text-decoration: line-through;
+  color: #9ca3af;
+}
+
+.cw-clue-text.cw-wrong {
+  font-weight: 600;
+}
+
+.cw-check {
+  font-weight: 700;
+  color: #000;
+  font-size: 0.875rem;
+  flex-shrink: 0;
+}
+
+/* ── Mobile clue box ─────────────────────────────────────────── */
+
+.cw-cluebox {
+  background: rgba(255,255,255,0.12);
+  border: 1px solid rgba(255,255,255,0.25);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border-radius: 12px;
+  padding: 10px 12px;
+  margin: 8px 12px 0;
+  max-height: 220px;
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
+.cw-mobile-actions {
+  display: flex;
+  gap: 10px;
+  margin: 20px 12px 12px;
+}
+
+.cw-mobile-actions > button {
+  flex: 1;
+}
+
+/* ── Active clue bar ─────────────────────────────────────────── */
+
+.cw-active-clue-bar {
+  background: rgba(255,255,255,0.12);
+  border: 1px solid rgba(255,255,255,0.25);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border-radius: 12px;
+  padding: 8px 14px;
+  font-weight: 700;
+  color: #111;
+  text-shadow: none;
+  box-sizing: border-box;
+}
+
+.cw-active-clue-placeholder {
+  font-weight: 700;
+  color: #111;
+}
+
+/* ── Crossword cell ───────────────────────────────────────────── */
+
+.cw-cell {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-sizing: border-box;
+  padding: 1px;
+}
+
+.cw-cell-number {
+  position: absolute;
+  top: 3px;
+  left: 4px;
+  font-size: clamp(7px, 1.5vw, 10px);
+  font-weight: 500;
+  line-height: 1;
+  pointer-events: none;
+  user-select: none;
+  color: rgba(255,255,255,0.65);
+  z-index: 1;
+}
+
+.cw-cell-letter {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: clamp(12px, 2.6vw, 18px);
+  font-weight: 700;
+  line-height: 1;
+  text-align: center;
+  padding: 0;
+  margin: 0;
+  background: transparent;
+  border: none;
+  outline: none;
+  caret-color: transparent;
+  color: rgba(15,15,15,0.95);
+  text-shadow: 0 1px 0 rgba(255,255,255,0.18);
+  text-transform: uppercase;
+  cursor: pointer;
+}
+
+/* Footer / Buttons row */
+.cw-btn-row {
+  display: none;
+}
+
+@media (min-width: 1024px) {
+  .cw-btn-row {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    gap: 10px;
+    margin-top: 30px;
+    padding-bottom: 14px;
+  }
+}
+
+.cw-btn {
+  width: 100%;
+  padding: 12px 28px;
+  font-weight: 700;
+  font-size: 0.95rem;
+  border: 1px solid rgba(255,255,255,0.25);
+  border-radius: 12px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  text-align: center;
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+}
+
+@media (min-width: 1024px) {
+  .cw-btn {
+    width: auto;
+    min-width: 140px;
+  }
+}
+
+.cw-btn-primary {
+  background: rgba(0,0,0,0.85);
+  color: #fff;
+  border: 1px solid rgba(0,0,0,0.3);
+}
+
+.cw-btn-primary:hover {
+  background: rgba(0,0,0,0.95);
+  transform: translateY(-1px);
+}
+
+.cw-btn-secondary {
+  background: rgba(255,255,255,0.85);
+  color: #000;
+  border: 1px solid rgba(255,255,255,0.4);
+}
+
+.cw-btn-secondary:hover {
+  background: rgba(255,255,255,0.95);
+  transform: translateY(-1px);
+}
