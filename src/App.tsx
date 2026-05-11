@@ -174,7 +174,7 @@ export default function App() {
         overflowX: 'hidden',
         paddingTop: 'max(8px, env(safe-area-inset-top))',
         paddingBottom: '8px',
-        backgroundImage: 'url(/ChatGPT_Image_May_11_2026_03_49_25.png)',
+        backgroundImage: 'url(/bg.png)',
         backgroundSize: 'cover',
         backgroundPosition: 'center',
         backgroundAttachment: 'fixed',
