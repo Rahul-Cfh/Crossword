@@ -4,6 +4,10 @@
 
 /* ── Crossword page scoped styles ────────────────────────────── */
 
+html {
+  scroll-behavior: smooth;
+}
+
 /* Prevent page-level horizontal scroll */
 html, body {
   overflow-x: hidden;
@@ -35,7 +39,7 @@ html, body {
   display: flex;
   flex-direction: column;
   gap: 10px;
-  padding-top: 10px;
+  /* padding-top: 10px; */
 }
 
 @media (min-width: 1024px) {
@@ -217,7 +221,9 @@ html, body {
 
 .cw-clue-text.cw-correct {
   text-decoration: line-through;
-  color: #9ca3af;
+  text-decoration-color: #6b7280;
+  color: #374151;
+  opacity: 0.85;
 }
 
 .cw-clue-text.cw-wrong {

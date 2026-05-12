@@ -17,6 +17,7 @@ const EMPTY_RAFFLE: RaffleForm = { firstName: '', lastName: '', company: '', ema
 
 export default function App() {
   const gridRef = useRef<CrosswordGridHandle>(null);
+  const resultRef = useRef<HTMLDivElement>(null);
   const [userInput, setUserInput] = useState<string[][]>(EMPTY_INPUT);
   const [submitted, setSubmitted] = useState(false);
   const [raffleForm, setRaffleForm] = useState<RaffleForm>(EMPTY_RAFFLE);
@@ -60,6 +61,14 @@ export default function App() {
 
   const handleSubmit = () => {
     setSubmitted(true);
+    requestAnimationFrame(() => {
+      requestAnimationFrame(() => {
+        const el = resultRef.current;
+        if (!el) return;
+        const y = el.getBoundingClientRect().top + window.scrollY - 16;
+        window.scrollTo({ top: y, behavior: 'smooth' });
+      });
+    });
   };
 
   const handleReset = () => {
@@ -76,7 +85,7 @@ export default function App() {
     if (raffleError) setRaffleError('');
   };
 
-  const handleRaffleSubmit = (e: React.FormEvent) => {
+  const handleRaffleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (!raffleForm.firstName.trim()) { setRaffleError('First name is required.'); return; }
@@ -84,14 +93,33 @@ export default function App() {
     if (!raffleForm.company.trim()) { setRaffleError('Company is required.'); return; }
     if (!emailRegex.test(raffleForm.email)) { setRaffleError('Please enter a valid email address.'); return; }
 
+    const url = new URL(window.location.href);
+    const id = url.searchParams.get('id') || '';
+
     const entry = {
       firstName: raffleForm.firstName.trim(),
       lastName: raffleForm.lastName.trim(),
       company: raffleForm.company.trim(),
       email: raffleForm.email.trim(),
       score: correctCount,
+      id,
       submittedAtISO: new Date().toISOString(),
     };
+
+    const endpoint = 'https://script.google.com/macros/s/AKfycbyn7Amsfxsftq4mmmHz0YICJKBBHVl0IHGpZ_FsdxTKSLjagdFh2DpFHGCzPygC3-hKMA/exec';
+    const body = new URLSearchParams();
+    body.append('firstName', entry.firstName);
+    body.append('lastName', entry.lastName);
+    body.append('company', entry.company);
+    body.append('email', entry.email);
+    body.append('score', String(entry.score));
+    body.append('id', entry.id);
+    try {
+      await fetch(endpoint, { method: 'POST', body, mode: 'no-cors' });
+    } catch {
+      setRaffleError('Could not submit. Please try again.');
+      return;
+    }
 
     const key = 'underwriters_crossword_entries';
     const existing = localStorage.getItem(key);
@@ -172,7 +200,7 @@ export default function App() {
       style={{
         minHeight: '100vh',
         overflowX: 'hidden',
-        paddingTop: 'max(8px, env(safe-area-inset-top))',
+        paddingTop: 'max(4px, env(safe-area-inset-top))',
         paddingBottom: '8px',
         backgroundImage: 'url(/bg.png)',
         backgroundSize: 'cover',
@@ -181,15 +209,15 @@ export default function App() {
       }}
     >
       {/* Page header — outside glass card so it never gets clipped */}
-      <div style={{ width: 'min(1200px, calc(100% - 16px))', margin: '0 auto', textAlign: 'center', padding: '0 4px 6px' }}>
+      <div style={{ width: 'min(1200px, calc(100% - 16px))', margin: '0 auto', textAlign: 'center', padding: '4px 8px 8px' }}>
         <h1
           style={{
-            fontSize: 'clamp(1.1rem, 3.5vw, 1.6rem)',
+            fontSize: 'clamp(1.5rem, 5.5vw, 2.4rem)',
             fontWeight: 800,
             color: '#000',
             marginBottom: '2px',
             letterSpacing: '-0.02em',
-            lineHeight: 1.2,
+            lineHeight: 1.15,
             wordBreak: 'break-word',
           }}
         >
@@ -204,7 +232,23 @@ export default function App() {
         <div className="cw-content-row">
 
           {/* Grid column */}
-          <div className="cw-grid-col">
+          <div className="cw-grid-col" style={{ position: 'relative' }}>
+            {/* Mobile-only HyperVerge logo — overlay in the grid's empty top-right corner */}
+            <img
+              src="/image.png"
+              alt="HyperVerge"
+              className="lg:hidden"
+              style={{
+                position: 'absolute',
+                top: '30px',
+                right: '8px',
+                height: 'clamp(52px, 17vw, 80px)',
+                width: 'auto',
+                objectFit: 'contain',
+                pointerEvents: 'none',
+                zIndex: 3,
+              }}
+            />
             <div className="cw-grid-viewport">
               <div className="cw-grid-scroll-inner">
                 <CrosswordGrid
@@ -256,7 +300,7 @@ export default function App() {
 
         {/* Score banner */}
         {submitted && (
-          <div style={{ maxWidth: '560px', margin: '10px auto 0', padding: '10px 16px', border: '2px solid #000', background: '#fff', textAlign: 'center' }}>
+          <div ref={resultRef} style={{ maxWidth: '560px', margin: '10px auto 0', padding: '10px 16px', border: '2px solid #000', background: '#fff', textAlign: 'center', scrollMarginTop: '16px' }}>
             {correctCount >= 4 ? (
               <p style={{ fontSize: '1rem', fontWeight: 700, color: '#000' }}>
                 Nice. You got {correctCount} out of {WORDS.length}. Enter your details below.
