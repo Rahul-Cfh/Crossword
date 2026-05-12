@@ -78,7 +78,7 @@ export const WORDS: Word[] = [
     direction: 'across',
     clueNumber: 9,
     startRow: 10,
-    startCol: 3,
+    startCol: 4,
     answer: 'STATEMENTS',
     clue: 'Where the real story shows up',
   },
