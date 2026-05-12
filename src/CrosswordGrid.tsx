@@ -37,7 +37,7 @@ const CLUE_NUMBERS: Record<string, number> = {
   '6,2':  6,
   '8,3':  7,
   '8,12': 8,
-  '10,4': 9,
+  '10,3': 9,
   '12,1': 10,
   '12,9': 11,
 };
@@ -84,9 +84,9 @@ function getActiveClue(row: number, col: number, dir: Direction): string {
     '3,9': { down: { num: 4, text: 'Position that matters after default' } },
     '5,5': { across: { num: 5, text: 'The second balance sheet in the file' } },
     '6,2': { down: { num: 6, text: 'Negative, and not just once' } },
-    '8,4': { across: { num: 7, text: 'Where no findings is the finding' } },
+    '8,3': { across: { num: 7, text: 'Where no findings is the finding' } },
     '8,12': { down: { num: 8, text: 'The box you\'re quietly put in' } },
-    '10,4': { across: { num: 9, text: 'Where the real story shows up' } },
+    '10,3': { across: { num: 9, text: 'Where the real story shows up' } },
     '12,1': { across: { num: 10, text: 'When paperwork time travels' } },
     '12,9': { across: { num: 11, text: 'The no that isn\'t always final' }, down: { num: 11, text: 'The no that isn\'t always final' } },
   };
