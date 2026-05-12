@@ -25,7 +25,7 @@ export const WORDS: Word[] = [
     clueNumber: 3,
     startRow: 3,
     startCol: 5,
-    answer: 'STIPULATION',
+    answer: 'STIPULATED',
     clue: 'Greenlit, with conditions attached',
   },
   {
@@ -34,7 +34,7 @@ export const WORDS: Word[] = [
     clueNumber: 4,
     startRow: 3,
     startCol: 10,
-    answer: 'FIRST',
+    answer: 'FIRSTLIEN',
     clue: 'Position that matters after default',
   },
   {
@@ -88,7 +88,7 @@ export const WORDS: Word[] = [
     clueNumber: 10,
     startRow: 12,
     startCol: 1,
-    answer: 'BACKDATE',
+    answer: 'BACKDATED',
     clue: 'When paperwork time travels',
   },
   {

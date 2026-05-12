@@ -7,13 +7,13 @@
 /* Prevent page-level horizontal scroll */
 html, body {
   overflow-x: hidden;
-  background: url('/files_4696452-2026-01-27T11-14-49-860Z-image.png') center/cover no-repeat fixed;
+  background: url('/background.png') center/cover no-repeat fixed;
   min-height: 100vh;
 }
 
 /* Glass card constraints */
 .cw-glass {
-  max-width: 980px;
+  max-width: 1200px;
   margin: 0 auto 8px;
   border-radius: 20px;
   padding: 0;
@@ -47,35 +47,30 @@ html, body {
   }
 }
 
-/* Grid column — 60% on desktop */
+/* Grid column — 65% on desktop */
 .cw-grid-col {
   width: 100%;
   max-width: 100%;
+  min-width: 0;
 }
 
 @media (min-width: 1024px) {
   .cw-grid-col {
-    width: 60%;
+    width: 65%;
     flex-shrink: 0;
   }
 }
 
-/* Grid viewport: horizontal scroller on mobile */
+/* Grid viewport: no horizontal scroll — grid sizes itself to fit container */
 .cw-grid-viewport {
   width: 100%;
   max-width: 100%;
   box-sizing: border-box;
-  overflow-x: auto;
-  overflow-y: hidden;
-  -webkit-overflow-scrolling: touch;
-  overscroll-behavior-x: contain;
-  padding-left: 0;
-  padding-right: 0;
+  overflow: hidden;
 }
 
-/* Inner wrapper — allows grid to be its natural size and scroll */
 .cw-grid-scroll-inner {
-  width: max-content;
+  width: 100%;
   margin: 0 auto;
 }
 

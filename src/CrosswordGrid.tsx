@@ -1,4 +1,4 @@
-import { useRef, useImperativeHandle, forwardRef, useState, useCallback } from 'react';
+import { useRef, useImperativeHandle, forwardRef, useState, useCallback, useEffect } from 'react';
 
 interface CrosswordGridProps {
   userInput: string[][];
@@ -17,14 +17,14 @@ type Direction = 'across' | 'down';
 const ANSWER_CELLS: Record<string, [number, number][]> = {
   lien:        [[1,2],[2,2],[3,2],[4,2]],
   registry:    [[3,1],[3,2],[3,3],[3,4],[3,5],[3,6],[3,7],[3,8]],
-  stipulation: [[3,5],[4,5],[5,5],[6,5],[7,5],[8,5],[9,5],[10,5],[11,5],[12,5],[13,5]],
-  first:       [[3,10],[4,10],[5,10],[6,10],[7,10]],
+  stipulation: [[3,5],[4,5],[5,5],[6,5],[7,5],[8,5],[9,5],[10,5],[11,5]],
+  first:       [[3,10],[4,10],[5,10],[6,10],[7,10],[8,10],[9,10],[10,10],[11,10]],
   guarantor:   [[5,7],[5,8],[5,9],[5,10],[5,11],[5,12],[5,13],[5,14],[5,15]],
   overdrawn:   [[6,2],[7,2],[8,2],[9,2],[10,2],[11,2],[12,2],[13,2],[14,2]],
   clear:       [[8,4],[8,5],[8,6],[8,7],[8,8]],
   riskclass:   [[8,13],[9,13],[10,13],[11,13],[12,13],[13,13],[14,13],[15,13],[16,13]],
   statements:  [[10,4],[10,5],[10,6],[10,7],[10,8],[10,9],[10,10],[10,11],[10,12],[10,13]],
-  backdate:    [[12,1],[12,2],[12,3],[12,4],[12,5],[12,6],[12,7],[12,8]],
+  backdate:    [[12,1],[12,2],[12,3],[12,4],[12,5],[12,6],[12,7],[12,8],[12,9]],
   decline:     [[12,9],[13,9],[14,9],[15,9],[16,9],[17,9],[18,9]],
 };
 
@@ -144,10 +144,32 @@ const CrosswordGrid = forwardRef<CrosswordGridHandle, CrosswordGridProps>(functi
   correctCells,
 }: CrosswordGridProps, ref) {
   const inputRefs = useRef<Map<string, HTMLInputElement | null>>(new Map());
+  const wrapRef = useRef<HTMLDivElement | null>(null);
 
   const [activeCell, setActiveCell] = useState<[number, number] | null>(null);
   const [activeDir, setActiveDir] = useState<Direction>('across');
   const [hoveredCell, setHoveredCell] = useState<string | null>(null);
+  const [cellSize, setCellSize] = useState<number>(40);
+
+  useEffect(() => {
+    const compute = () => {
+      const parent = wrapRef.current?.parentElement;
+      const available = parent?.clientWidth ?? window.innerWidth;
+      const size = Math.max(18, Math.min(44, Math.floor(available / MAX_COL)));
+      setCellSize(size);
+    };
+    compute();
+    window.addEventListener('resize', compute);
+    let ro: ResizeObserver | null = null;
+    if (typeof ResizeObserver !== 'undefined' && wrapRef.current?.parentElement) {
+      ro = new ResizeObserver(compute);
+      ro.observe(wrapRef.current.parentElement);
+    }
+    return () => {
+      window.removeEventListener('resize', compute);
+      ro?.disconnect();
+    };
+  }, []);
 
   const focusCell = useCallback((r: number, c: number) => {
     inputRefs.current.get(`${r},${c}`)?.focus();
@@ -231,7 +253,9 @@ const CrosswordGrid = forwardRef<CrosswordGridHandle, CrosswordGridProps>(functi
     if (letter) {
       const next = getNextCell(row, col, activeDir);
       if (next) {
+        const nextDir = inferDirection(next[0], next[1], activeDir);
         setActiveCell(next);
+        setActiveDir(nextDir);
         focusCell(next[0], next[1]);
       }
     }
@@ -246,14 +270,12 @@ const CrosswordGrid = forwardRef<CrosswordGridHandle, CrosswordGridProps>(functi
   const activeKey = activeCell ? `${activeCell[0]},${activeCell[1]}` : '';
   const activeClue = activeCell ? getActiveClue(activeCell[0], activeCell[1], activeDir) : '';
 
- const CELL_SIZE = typeof window !== 'undefined' && window.innerWidth < 600
-    ? Math.floor((window.innerWidth - 32) / 16)
-    : 40;
+  const CELL_SIZE = cellSize;
   const gridWidth = MAX_COL * CELL_SIZE;
   const gridHeight = MAX_ROW * CELL_SIZE;
 
   return (
-    <div className="flex flex-col items-center gap-2 w-full">
+    <div ref={wrapRef} className="flex flex-col items-center gap-2 w-full">
       <div
         className="cw-active-clue-bar w-full truncate min-h-[24px]"
         style={{ fontSize: 'clamp(13px, 3vw, 16px)' }}
@@ -267,7 +289,7 @@ const CrosswordGrid = forwardRef<CrosswordGridHandle, CrosswordGridProps>(functi
           justifyContent: 'center',
           alignItems: 'center',
           width: '100%',
-          padding: '16px',
+          padding: '4px',
           boxSizing: 'border-box',
           position: 'relative',
         }}
@@ -322,11 +344,11 @@ const CrosswordGrid = forwardRef<CrosswordGridHandle, CrosswordGridProps>(functi
                   <span
                     style={{
                       position: 'absolute',
-                      top: '2px',
+                      top: '1px',
                       left: '2px',
-                      fontSize: '10px',
+                      fontSize: `${Math.max(7, Math.floor(CELL_SIZE * 0.28))}px`,
                       fontWeight: 'bold',
-                      color: 'rgba(255,255,255,0.7)',
+                      color: '#000',
                       lineHeight: '1',
                       fontFamily: 'system-ui, -apple-system, sans-serif',
                       zIndex: 2,
@@ -346,7 +368,6 @@ const CrosswordGrid = forwardRef<CrosswordGridHandle, CrosswordGridProps>(functi
                   autoCorrect="off"
                   autoCapitalize="characters"
                   spellCheck={false}
-                  maxLength={1}
                   value={userInput[r]?.[c] || ''}
                   onChange={(e) => handleChange(r, c, e)}
                   onKeyDown={(e) => handleKeyDown(r, c, e)}
@@ -356,13 +377,13 @@ const CrosswordGrid = forwardRef<CrosswordGridHandle, CrosswordGridProps>(functi
                   style={{
                     width: '100%',
                     height: '100%',
-                    fontSize: '18px',
+                    fontSize: `${Math.max(10, Math.floor(CELL_SIZE * 0.55))}px`,
                     fontWeight: 'bold',
                     textAlign: 'center',
                     background: 'transparent',
                     border: 'none',
-                    color: 'rgba(255,255,255,0.95)',
-                    caretColor: 'rgba(255,220,120,0.7)',
+                    color: '#000',
+                    caretColor: '#000',
                   }}
                 />
               </div>

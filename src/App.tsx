@@ -181,7 +181,7 @@ export default function App() {
       }}
     >
       {/* Page header — outside glass card so it never gets clipped */}
-      <div style={{ width: 'min(980px, calc(100% - 24px))', margin: '0 auto', textAlign: 'center', padding: '0 4px 6px' }}>
+      <div style={{ width: 'min(1200px, calc(100% - 16px))', margin: '0 auto', textAlign: 'center', padding: '0 4px 6px' }}>
         <h1
           style={{
             fontSize: 'clamp(1.1rem, 3.5vw, 1.6rem)',
@@ -195,13 +195,10 @@ export default function App() {
         >
           The Underwriter's Crossword
         </h1>
-        <p style={{ fontSize: 'clamp(0.75rem, 2vw, 0.875rem)', color: '#374151' }}>
-          Get 4 or more words correct to enter the iPad raffle.
-        </p>
       </div>
 
       {/* Glass card — width matches header */}
-      <div className="cw-glass" style={{ width: 'min(980px, calc(100% - 24px))' }}>
+      <div className="cw-glass" style={{ width: 'min(1200px, calc(100% - 16px))' }}>
 
         {/* Main content row: grid (left) + clues (right) */}
         <div className="cw-content-row">
@@ -339,7 +336,7 @@ export default function App() {
               )}
               {raffleSubmitted ? (
                 <p style={{ textAlign: 'center', fontWeight: 700, color: '#000', padding: '8px 0' }}>
-                  You're entered in the iPad draw.
+                  Thanks for playing!
                 </p>
               ) : (
                 <button
