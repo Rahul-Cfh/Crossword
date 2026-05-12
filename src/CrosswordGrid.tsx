@@ -17,29 +17,29 @@ type Direction = 'across' | 'down';
 const ANSWER_CELLS: Record<string, [number, number][]> = {
   lien:        [[1,2],[2,2],[3,2],[4,2]],
   registry:    [[3,1],[3,2],[3,3],[3,4],[3,5],[3,6],[3,7],[3,8]],
-  stipulation: [[3,4],[4,4],[5,4],[6,4],[7,4],[8,4],[9,4],[10,4],[11,4],[12,4],[13,4]],
-  first:       [[3,9],[4,9],[5,9],[6,9],[7,9]],
-  guarantor:   [[5,5],[5,6],[5,7],[5,8],[5,9],[5,10],[5,11],[5,12],[5,13]],
+  stipulation: [[3,5],[4,5],[5,5],[6,5],[7,5],[8,5],[9,5],[10,5],[11,5],[12,5],[13,5]],
+  first:       [[3,10],[4,10],[5,10],[6,10],[7,10]],
+  guarantor:   [[5,7],[5,8],[5,9],[5,10],[5,11],[5,12],[5,13],[5,14],[5,15]],
   overdrawn:   [[6,2],[7,2],[8,2],[9,2],[10,2],[11,2],[12,2],[13,2],[14,2]],
-  clear: [[8,3],[8,4],[8,5],[8,6],[8,7]],
-  riskclass:   [[8,12],[9,12],[10,12],[11,12],[12,12],[13,12],[14,12],[15,12],[16,12]],
-  statements:  [[10,3],[10,4],[10,5],[10,6],[10,7],[10,8],[10,9],[10,10],[10,11],[10,12]],
+  clear:       [[8,4],[8,5],[8,6],[8,7],[8,8]],
+  riskclass:   [[8,13],[9,13],[10,13],[11,13],[12,13],[13,13],[14,13],[15,13],[16,13]],
+  statements:  [[10,4],[10,5],[10,6],[10,7],[10,8],[10,9],[10,10],[10,11],[10,12],[10,13]],
   backdate:    [[12,1],[12,2],[12,3],[12,4],[12,5],[12,6],[12,7],[12,8]],
   decline:     [[12,9],[13,9],[14,9],[15,9],[16,9],[17,9],[18,9]],
 };
 
 const CLUE_NUMBERS: Record<string, number> = {
-  '1,2':  1,
-  '3,1':  2,
-  '3,4':  3,
-  '3,9':  4,
-  '5,5':  5,
-  '6,2':  6,
-  '8,3':  7,
-  '8,12': 8,
-  '10,3': 9,
-  '12,1': 10,
-  '12,9': 11,
+  '1,2':   1,
+  '3,1':   2,
+  '3,5':   3,
+  '3,10':  4,
+  '5,7':   5,
+  '6,2':   6,
+  '8,4':   7,
+  '8,13':  8,
+  '10,4':  9,
+  '12,1':  10,
+  '12,9':  11,
 };
 
 
@@ -77,18 +77,18 @@ function getWordCells(row: number, col: number, dir: Direction): [number, number
 }
 
 function getActiveClue(row: number, col: number, dir: Direction): string {
-  const clueMap: Record<string, Record<Direction, { num: number; text: string }>> = {
-    '1,2': { down: { num: 1, text: 'A Claim you didn\'t notice' } },
-    '3,1': { across: { num: 2, text: 'Public memory for your collateral\'s worst surprises' } },
-    '3,4': { across: { num: 3, text: 'Where no findings is the finding' }, down: { num: 3, text: 'Where no findings is the finding' } },
-    '3,9': { down: { num: 4, text: 'Position that matters after default' } },
-    '5,5': { across: { num: 5, text: 'The second balance sheet in the file' } },
-    '6,2': { down: { num: 6, text: 'Negative, and not just once' } },
-    '8,3': { across: { num: 7, text: 'Where no findings is the finding' } },
-    '8,12': { down: { num: 8, text: 'The box you\'re quietly put in' } },
-    '10,3': { across: { num: 9, text: 'Where the real story shows up' } },
-    '12,1': { across: { num: 10, text: 'When paperwork time travels' } },
-    '12,9': { across: { num: 11, text: 'The no that isn\'t always final' }, down: { num: 11, text: 'The no that isn\'t always final' } },
+  const clueMap: Record<string, Partial<Record<Direction, { num: number; text: string }>>> = {
+    '1,2':   { down:   { num: 1,  text: 'A claim you didn\'t notice' } },
+    '3,1':   { across: { num: 2,  text: 'Public memory for your collateral\'s worst surprises' } },
+    '3,5':   { down:   { num: 3,  text: 'Greenlit, with conditions attached' } },
+    '3,10':  { down:   { num: 4,  text: 'Position that matters after default' } },
+    '5,7':   { across: { num: 5,  text: 'The second balance sheet in the file' } },
+    '6,2':   { down:   { num: 6,  text: 'Negative, and not just once' } },
+    '8,4':   { across: { num: 7,  text: 'Where no findings is the finding' } },
+    '8,13':  { down:   { num: 8,  text: 'The box you\'re quietly put in' } },
+    '10,4':  { across: { num: 9,  text: 'Where the real story shows up' } },
+    '12,1':  { across: { num: 10, text: 'When paperwork time travels' } },
+    '12,9':  { down:   { num: 11, text: 'The no that isn\'t always final' } },
   };
 
   const cells = getWordCells(row, col, dir);
